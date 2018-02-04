@@ -1,6 +1,8 @@
 {
   "presets": [
-    "babel-preset-env",
+    "env",
     "react"
-  ]
+  ],
+  "plugins": [
+    "transform-regenerator"]
 }
