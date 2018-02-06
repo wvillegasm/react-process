@@ -5,19 +5,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const manifestJSON = require('./vendor/dll-manifest.json')
 const InlineChunkManifestHtmlWebpackPlugin = require('inline-chunk-manifest-html-webpack-plugin')
 const cleanWebpackPlugin = require('clean-webpack-plugin')
-
-/***
- * https://github.com/webpack-contrib/purifycss-webpack
- * @type {string[]}
- */
-
-const pck = require('./package')
-const VENDOR_LIST = Object.keys(pck.dependencies)
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 
 const plugins = [
   new HtmlWebpackPlugin({
     template: 'src/index.html',
-    hash: true,
+    hash: false,
     filename: 'index.html',
     minify: {
       collapseWhitespace: true,
@@ -26,6 +19,13 @@ const plugins = [
       removeComments: true,
       removeEmptyAttributes: true,
     },
+  }),
+  new AddAssetHtmlPlugin({
+    filepath: path.join(__dirname, 'vendor', 'dll.*.js'),
+    hash: false,
+    includeSourcemap: false,
+    outputPath: './js',
+    publicPath: 'js',
   }),
   new webpack.NodeEnvironmentPlugin(['NODE_ENV', 'DEBUG']),
 ]
@@ -40,41 +40,38 @@ const config = (env) => {
     use: ['css-loader', 'sass-loader'],
   })
   const cssConfig = isProd ? cssProd : cssDev
+  const devtool = !isProd ? 'source-map' : false
 
   if (isProd) {
     plugins.push(new cleanWebpackPlugin(['dist'], { root: __dirname }))
     plugins.push(new webpack.DllReferencePlugin({
-      context: path.join(__dirname, 'vendor'),
+      context: path.join(__dirname),
       manifest: manifestJSON,
     }))
   }
 
-  /*if (!isProd) {
-    plugins.push(new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendor', 'manifest'],
-        minChunks: Infinity,
-      }),
-    )
-  }*/
+  if (!isProd) {
+    plugins.push(new webpack.NamedModulesPlugin())
+    plugins.push(new webpack.HotModuleReplacementPlugin())
+  }
 
   // All others plugins by default
-  const extractTextConfig = new ExtractTextWebpackPlugin({
+  plugins.push(new ExtractTextWebpackPlugin({
     filename: 'css/[name].[contenthash].css',
     disable: !isProd,
     allChunks: true,
-  })
-  plugins.push(extractTextConfig)
+  }))
+  plugins.push()
 
   return {
     entry: {
-      vendor: VENDOR_LIST,
-      bundle: './src/index.js',
+      bundle: ['babel-polyfill', './src/index.js'],
       lib: './src/test-lib.js',
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'js/[name].[chunkhash].js',
-      chunkFilename: 'js/[id].[chunkhash].js',
+      filename: 'js/[name].[hash].js',
+      chunkFilename: 'js/[id].[hash].js',
     },
     module: {
       rules: [
@@ -124,9 +121,10 @@ const config = (env) => {
       stats: 'errors-only',
       port: 3001,
       clientLogLevel: 'info',
+      hot: true,
     },
-    watch: true,
-    devtool: 'source-map',
+    watch: !isProd,
+    devtool,
   }
 
 

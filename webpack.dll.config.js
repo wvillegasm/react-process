@@ -2,15 +2,12 @@ const path = require('path')
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-/***
- * https://github.com/webpack-contrib/purifycss-webpack
- * @type {string[]}
- */
+const cleanWebpackPlugin = require('clean-webpack-plugin')
 
 const pck = require('./package')
-
 const VENDOR_LIST = Object.keys(pck.dependencies)
+
+console.log(JSON.stringify(VENDOR_LIST))
 
 const config = {
   entry: {
@@ -18,19 +15,16 @@ const config = {
   },
   output: {
     path: path.resolve(__dirname, 'vendor'),
-    filename: '[name].bundle.js',
+    filename: '[name].[hash].js',
     library: '[name]_[hash]',
   },
   plugins: [
+    new cleanWebpackPlugin(['vendor'], { root: __dirname }),
     new webpack.DllPlugin({
-      path: path.join(__dirname, 'vendor','[name]-manifest.json'),
-      context: __dirname,
+      path: path.join(__dirname, 'vendor', '[name]-manifest.json'),
+      context: path.join(__dirname),
       name: '[name]_[hash]',
     }),
-   /* new webpack.optimize.CommonsChunkPlugin({
-      names: ['dll'],
-      minChunks: Infinity,
-    }),*/
   ],
 }
 
