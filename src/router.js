@@ -33,6 +33,7 @@ const Routes = () => (
       <Route exact path="/" component={Home} />
       <Route path="/artist/home" render={props => <ArtistMain {...props} />} />
       <Route path="/artist/new" render={props => <ArtistCreate {...props} />} />
+
     </div>
   </Router>
 )

@@ -3,8 +3,8 @@ const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const manifestJSON = require('./vendor/dll-manifest.json')
-const InlineChunkManifestHtmlWebpackPlugin = require('inline-chunk-manifest-html-webpack-plugin')
-const cleanWebpackPlugin = require('clean-webpack-plugin')
+// const InlineChunkManifestHtmlWebpackPlugin = require('inline-chunk-manifest-html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 
 const plugins = [
@@ -30,11 +30,12 @@ const plugins = [
   new webpack.NodeEnvironmentPlugin(['NODE_ENV', 'DEBUG']),
 ]
 
-
 const config = (env) => {
-
   const isProd = env.NODE_ENV === 'production'
-  const cssDev = ['style-loader?sourceMap', 'css-loader?sourceMap', 'sass-loader?sourceMap']
+  const cssDev = [
+    'style-loader?sourceMap',
+    'css-loader?sourceMap',
+    'sass-loader?sourceMap']
   const cssProd = ExtractTextWebpackPlugin.extract({
     fallback: 'style-loader',
     use: ['css-loader', 'sass-loader'],
@@ -43,7 +44,7 @@ const config = (env) => {
   const devtool = !isProd ? 'source-map' : false
 
   if (isProd) {
-    plugins.push(new cleanWebpackPlugin(['dist'], { root: __dirname }))
+    plugins.push(new CleanWebpackPlugin(['dist'], { root: __dirname }))
     plugins.push(new webpack.DllReferencePlugin({
       context: path.join(__dirname),
       manifest: manifestJSON,
@@ -65,7 +66,7 @@ const config = (env) => {
 
   return {
     entry: {
-      bundle: ['babel-polyfill', './src/index.js'],
+      bundle: ['babel-polyfill','./src/index.js'],
       lib: './src/test-lib.js',
     },
     output: {
@@ -89,9 +90,6 @@ const config = (env) => {
           exclude: /(node_modules)/,
           use: {
             loader: 'babel-loader',
-            options: {
-              plugins: ['syntax-dynamic-import'],
-            },
           },
         },
         {
@@ -123,11 +121,9 @@ const config = (env) => {
       clientLogLevel: 'info',
       hot: true,
     },
-    watch: !isProd,
+    watch: false,
     devtool,
   }
-
-
 }
 
 module.exports = config

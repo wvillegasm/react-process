@@ -1,13 +1,16 @@
 import React from 'react'
-import './style/home.scss'
-import './style/home.css'
+import Media from './Media'
+import './styles/home.scss'
 
 const Home = () => (
   <div className="Page">
 
     <p>Home page</p>
 
-    <div className="Home" />
+    <Media
+      title="React to everyone"
+      image="http://lorempixel.com/260/260"
+    />
 
   </div>
 )
