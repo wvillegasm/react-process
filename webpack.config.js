@@ -1,5 +1,6 @@
 const path = require('path')
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+// const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const manifestJSON = require('./vendor/dll-manifest.json')
@@ -27,19 +28,24 @@ const plugins = [
     outputPath: './js',
     publicPath: 'js',
   }),
+  new MiniCssExtractPlugin({
+    filename: 'css/[name].[contenthash].css',
+    chunkFilename: 'css/[name].[contenthash].css',
+  }),
   new webpack.NodeEnvironmentPlugin(['NODE_ENV', 'DEBUG']),
 ]
 
 const config = (env) => {
   const isProd = env.NODE_ENV === 'production'
+  const mode = isProd ? 'production' : 'development'
   const cssDev = [
     'style-loader?sourceMap',
     'css-loader?sourceMap',
     'sass-loader?sourceMap']
-  const cssProd = ExtractTextWebpackPlugin.extract({
-    fallback: 'style-loader',
-    use: ['css-loader', 'sass-loader'],
-  })
+  const cssProd = [
+    MiniCssExtractPlugin.loader,
+    'css-loader,sass-loader',
+  ]
   const cssConfig = isProd ? cssProd : cssDev
   const devtool = !isProd ? 'source-map' : false
 
@@ -57,16 +63,18 @@ const config = (env) => {
   }
 
   // All others plugins by default
+  /*
   plugins.push(new ExtractTextWebpackPlugin({
     filename: 'css/[name].[contenthash].css',
     disable: !isProd,
     allChunks: true,
   }))
-  plugins.push()
+  */
+
 
   return {
     entry: {
-      bundle: ['babel-polyfill','./src/index.js'],
+      bundle: ['babel-polyfill', './src/index.js'],
       lib: './src/test-lib.js',
     },
     output: {
@@ -123,6 +131,7 @@ const config = (env) => {
     },
     watch: false,
     devtool,
+    mode,
   }
 }
 
