@@ -11,7 +11,7 @@ class Media extends Component {
   handleMediaClick = (event) => {
     console.log(event.target)
     this.setState({
-      author: 'A new Author',
+      author: 'A new Author - Exposed',
     })
   }
 
@@ -21,6 +21,7 @@ class Media extends Component {
 
   render() {
     const { title, image } = this.props
+    const { author } = this.state
     return (
       <div
         className="Media"
@@ -43,7 +44,7 @@ class Media extends Component {
           <p
             className="Media-author"
           >
-            {this.state.author}
+            {author}
           </p>
         </div>
       </div>

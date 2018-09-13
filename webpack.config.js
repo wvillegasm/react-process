@@ -74,7 +74,7 @@ const config = (env) => {
 
   return {
     entry: {
-      bundle: ['babel-polyfill', './src/index.js'],
+      bundle: ['./src/index.js'],
       lib: './src/test-lib.js',
     },
     output: {
