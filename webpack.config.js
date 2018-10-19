@@ -1,12 +1,10 @@
 const path = require('path')
-// const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const manifestJSON = require('./vendor/dll-manifest.json')
-// const InlineChunkManifestHtmlWebpackPlugin = require('inline-chunk-manifest-html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
+const manifestJSON = require('./vendor/dll-manifest.json')
 
 const plugins = [
   new HtmlWebpackPlugin({
@@ -18,21 +16,18 @@ const plugins = [
       html5: true,
       minifyCSS: true,
       removeComments: true,
-      removeEmptyAttributes: true,
-    },
+      removeEmptyAttributes: true
+    }
   }),
   new AddAssetHtmlPlugin({
     filepath: path.join(__dirname, 'vendor', 'dll.*.js'),
     hash: false,
     includeSourcemap: false,
     outputPath: './js',
-    publicPath: 'js',
+    publicPath: 'js'
   }),
-  new MiniCssExtractPlugin({
-    filename: 'css/[name].[contenthash].css',
-    chunkFilename: 'css/[name].[contenthash].css',
-  }),
-  new webpack.NodeEnvironmentPlugin(['NODE_ENV', 'DEBUG']),
+
+  new webpack.NodeEnvironmentPlugin(['NODE_ENV', 'DEBUG'])
 ]
 
 const config = (env) => {
@@ -44,8 +39,9 @@ const config = (env) => {
     'sass-loader?sourceMap']
   const cssProd = [
     MiniCssExtractPlugin.loader,
-    'css-loader,sass-loader',
+    'css-loader,sass-loader'
   ]
+
   const cssConfig = isProd ? cssProd : cssDev
   const devtool = !isProd ? 'source-map' : false
 
@@ -53,7 +49,7 @@ const config = (env) => {
     plugins.push(new CleanWebpackPlugin(['dist'], { root: __dirname }))
     plugins.push(new webpack.DllReferencePlugin({
       context: path.join(__dirname),
-      manifest: manifestJSON,
+      manifest: manifestJSON
     }))
   }
 
@@ -62,47 +58,51 @@ const config = (env) => {
     plugins.push(new webpack.HotModuleReplacementPlugin())
   }
 
-  // All others plugins by default
-  /*
-  plugins.push(new ExtractTextWebpackPlugin({
-    filename: 'css/[name].[contenthash].css',
-    disable: !isProd,
-    allChunks: true,
-  }))
-  */
-
+  const miniCss = new MiniCssExtractPlugin({
+    filename: isProd ? '[name].[hash].css' : '[name].css',
+    chunkFilename: isProd ? '[id].css' : '[id].[hash].css'
+  })
+  plugins.push(miniCss)
 
   return {
     entry: {
-      bundle: ['./src/index.js'],
-      lib: './src/test-lib.js',
+      bundle: ['./src/index.js']
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'js/[name].[hash].js',
-      chunkFilename: 'js/[id].[hash].js',
+      chunkFilename: 'js/[id].[hash].js'
     },
     module: {
       rules: [
         {
           enforce: 'pre',
           test: /\.jsx?$/,
-          exclude: /node_modules/,
-          loader: 'eslint-loader',
-          options: {
-            fix: false,
-          },
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'standard-loader',
+            options: {
+              // Emit errors instead of warnings (default = false)
+              error: true,
+              // enable snazzy output (default = true)
+              snazzy: true,
+              // configure alternative checker e.g. 'standardx' (default = 'standard')
+              standard: 'standard',
+              // all other config options are passed through to standard e.g.
+              parser: 'babel-eslint'
+            }
+          }
         },
         {
           test: /\.jsx?$/,
           exclude: /(node_modules)/,
           use: {
-            loader: 'babel-loader',
-          },
+            loader: 'babel-loader'
+          }
         },
         {
           test: /\.s?css$/,
-          use: cssConfig,
+          use: cssConfig
 
         },
         {
@@ -110,14 +110,14 @@ const config = (env) => {
             {
               loader: 'url-loader',
               options: {
-                limit: 1000,
-              },
+                limit: 1000
+              }
             },
-            'image-webpack-loader',
+            'image-webpack-loader'
           ],
-          test: /\.(jpe?g|png|gif|svg)$/,
-        },
-      ],
+          test: /\.(jpe?g|png|gif|svg)$/
+        }
+      ]
     },
     plugins,
     devServer: {
@@ -127,11 +127,11 @@ const config = (env) => {
       stats: 'errors-only',
       port: 3001,
       clientLogLevel: 'info',
-      hot: true,
+      hot: true
     },
     watch: false,
     devtool,
-    mode,
+    mode
   }
 }
 

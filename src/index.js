@@ -1,12 +1,13 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import Routes from './router'
+import { render } from 'react-dom'
+import Playlist from './playlist/components/playlist'
+import data from './api.json'
 
 import './main.scss'
 
-ReactDOM.render(
-  <Routes />,
-  document.getElementById('root'),
+render(
+  <Playlist data={data} />,
+  document.getElementById('root')
 )
 
 if (module.hot) {
