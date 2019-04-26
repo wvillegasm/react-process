@@ -28,18 +28,19 @@
     "func-names": [
       "error",
       "never"
-    ],
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": [
-          "Link"
-        ],
-        "specialLink": [
-          "to"
-        ]
-      }
     ]
+//    ,
+//    "jsx-a11y/anchor-is-valid": [
+//      "error",
+//      {
+//        "components": [
+//          "Link"
+//        ],
+//        "specialLink": [
+//          "to"
+//        ]
+//      }
+//    ]
     /*"no-unused-vars": [1, {"vars": "local", "args": "none"}]*/
   },
   "parserOptions": {

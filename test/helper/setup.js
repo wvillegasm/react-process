@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import Enzyme from 'enzyme/build'
+import Adapter from 'enzyme-adapter-react-16/build'
 import chai from 'chai'
 import register from 'ignore-styles'
 
@@ -10,6 +10,7 @@ global.rewire = require('rewire')
 
 Enzyme.configure({ adapter: new Adapter() })
 global.enzyme = Enzyme
+global.shallow = Enzyme.shallow
 
 chai.config.includeStack = true
 global.expect = chai.expect

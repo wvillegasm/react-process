@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import './styles/media.css'
+import 'playlist/components/styles/media.css'
 
 class Media extends Component {
+  static propTypes = {
+    image: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string,
+    type: PropTypes.oneOf(['video', 'audio'])
+  }
+
   imageHandleClick = (event) => {
     const { target } = event
     console.log(target)
@@ -10,7 +17,7 @@ class Media extends Component {
 
   render () {
     return (
-      <div className='Media'>
+      <div id='media-id' className='Media'>
         <div className='Media-cover'>
           <img
             alt={this.props.description}
@@ -26,13 +33,6 @@ class Media extends Component {
       </div>
     )
   }
-}
-
-Media.propTypes = {
-  image: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string,
-  type: PropTypes.oneOf(['video', 'audio'])
 }
 
 export default Media

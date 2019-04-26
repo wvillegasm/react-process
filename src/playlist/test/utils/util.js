@@ -9,7 +9,12 @@ const opts = {
 }
 
 const minifyHtml = (html) => minify(html, opts)
+const formattedHtml = html => minify(html, Object.assign(opts, {
+  collapseWhitespace: false,
+  collapseBooleanAttributes: false
+}))
 
 export {
-  minifyHtml
+  minifyHtml,
+  formattedHtml
 }
