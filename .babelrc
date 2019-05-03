@@ -17,6 +17,14 @@
       {
         "loose": true
       }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src"
+        ]
+      }
     ]
   ]
 }

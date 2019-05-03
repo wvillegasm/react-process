@@ -6,9 +6,9 @@
   "main": "index.js",
   "scripts": {
     "test": "env NODE_PATH=$NODE_PATH:$PWD/src mocha --require @babel/register --require ignore-styles --require test/helper/setup.js 'src/**/*-spec.@(js|jsx)' --reporter spec --use_strict --throw-deprecation --watch",
-    "lint": "eslint --color --ext js --ext jsx ./src; exit 0",
+    "lint": "eslint --color --ext js --ext jsx ./src | snazzy",
     "standard": "standard --verbose --parser babel-eslint | snazzy",
-    "build": "webpack --env.NODE_ENV=production -p",
+    "build": "rimraf dist && webpack --env.NODE_ENV=production -p",
     "dev": "webpack-dev-server --env.NODE_ENV=local",
     "dll": "rimraf vendor && webpack  --config webpack.dll.config.js -p",
     "postinstall": "npm run dll",
@@ -31,6 +31,7 @@
     "add-asset-html-webpack-plugin": "^3.1.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "babel-plugin-module-resolver": "^3.2.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^2.0.1",
     "css-loader": "^2.1.1",
@@ -54,7 +55,6 @@
     "inline-chunk-manifest-html-webpack-plugin": "^2.0.0",
     "mini-css-extract-plugin": "^0.6.0",
     "mocha": "^6.1.4",
-    "node-sass": "^4.11.0",
     "rewire": "^4.0.1",
     "sass-loader": "^7.1.0",
     "sinon": "^7.3.2",
@@ -83,13 +83,16 @@
   },
   "standard": {
     "globals": [
+      "assert",
+      "beforeEach",
       "enzyme",
-      "sinon",
+      "expect",
       "describe",
       "it",
-      "expect"
+      "shallow",
+      "sinon"
     ],
     "parser": "babel-eslint",
-    "error": false
+    "error": true
   }
 }

@@ -3,6 +3,7 @@
     margin-right: 15px;
     display: inline-block;
     width: 260px;
+    height: 160px;
     vertical-align: top;
 }
 
@@ -18,6 +19,8 @@
 
 .Media-image {
     object-fit: cover;
+    height: 160px;
+    width: 260px;
 }
 
 .Media-title {

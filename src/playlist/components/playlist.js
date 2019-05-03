@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import Media from 'playlist/components/media'
-// import cover from '../../images/covers/saul.jpeg'
+
+import Media from 'video/playlist/components/media'
+// import cover from 'images/saul.jpg'
 
 class Playlist extends Component {
   render () {
     return (
       <Media
-        image='./images/covers/html5.jpg'
-        title='My Title'
-        author='Me Matt'
-        type='video'
-        description='My Video'
+        author="Me Matt"
+        image="/images/covers/felices.jpg"
+        title="My Title"
+        type="video"
+        description="My Video"
       />
     )
   }

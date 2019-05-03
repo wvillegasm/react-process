@@ -1,34 +1,48 @@
+import 'video/playlist/components/styles/media.css'
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import 'playlist/components/styles/media.css'
 
 class Media extends Component {
   static propTypes = {
-    image: PropTypes.string,
-    title: PropTypes.string.isRequired,
     author: PropTypes.string,
+    description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['video', 'audio'])
   }
 
-  imageHandleClick = (event) => {
+  state = {
+    targetEvent: null
+  }
+
+  imageHandleClick (event) {
     const { target } = event
-    console.log(target)
+
+    this.setState({ targetEvent: target.value })
   }
 
   render () {
+    const { author, description, image, title, type } = this.props
+
     return (
-      <div id='media-id' className='Media'>
-        <div className='Media-cover'>
+      <div
+        id="media-id"
+        className="Media"
+      >
+        <div
+          className="Media-cover"
+          onClick={event => this.imageHandleClick(event)}
+        >
           <img
-            alt={this.props.description}
-            className='Media-image'
+            alt={description}
+            className="Media-image"
             height={160}
-            onClick={this.imageHandleClick}
-            src={this.props.image}
+            src={image}
             width={260}
           />
-          <h3 className='Media-title'>{this.props.title}</h3>
-          <p className='Media-author'>{this.props.author}</p>
+          <h3 className="Media-title">{title}-{type}</h3>
+          <p className="Media-author">{author}</p>
         </div>
       </div>
     )
